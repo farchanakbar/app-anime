@@ -41,29 +41,29 @@ class CustomTheme {
 
   // dark theme
   static final darkTheme = ThemeData(
-    primaryColor: darkThemeColor,
+    primaryColor: colorSatu,
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: black,
+    scaffoldBackgroundColor: colorSatu,
     useMaterial3: true,
     fontFamily: darkThemeFont,
     switchTheme: SwitchThemeData(
       trackColor:
-          MaterialStateProperty.resolveWith<Color>((states) => darkThemeColor),
+          MaterialStateProperty.resolveWith<Color>((states) => colorSatu),
     ),
     appBarTheme: AppBarTheme(
       centerTitle: true,
-      backgroundColor: black,
+      backgroundColor: colorSatu,
       scrolledUnderElevation: 0,
       titleTextStyle: TextStyle(
         fontWeight: FontWeight.w500,
         color: white,
         fontSize: 23, //20
       ),
-      iconTheme: IconThemeData(color: darkThemeColor),
+      iconTheme: IconThemeData(color: white),
       elevation: 0,
-      actionsIconTheme: IconThemeData(color: darkThemeColor),
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: black,
+      actionsIconTheme: IconThemeData(color: white),
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarColor: colorSatu,
         statusBarIconBrightness: Brightness.light,
       ),
     ),

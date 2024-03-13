@@ -48,43 +48,70 @@ class AnimeComplateView extends GetView<AnimeComplateController> {
                                 'slug': animeComplate.slug
                               });
                             },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Stack(
-                                  children: [
-                                    SizedBox(
-                                      height: 200,
-                                      width: 300,
-                                      child: Image.network(
-                                        '${animeComplate.poster}',
-                                        fit: BoxFit.cover,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.white54)),
+                              child: Stack(
+                                children: [
+                                  SizedBox(
+                                    height: 350,
+                                    width: 300,
+                                    child: Image.network(
+                                      '${animeComplate.poster}',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.only(
+                                          bottomRight: Radius.circular(10),
+                                        ),
+                                        color: colorSatu.withOpacity(0.9)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5),
+                                      child: Text(
+                                        '${animeComplate.episodeCount} Episode',
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(5),
-                                      child: Container(
-                                        color: colorDua.withOpacity(0.8),
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(5),
-                                          child: Text('Complate'),
+                                  ),
+                                  Positioned(
+                                    right: 0,
+                                    top: 0,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.only(
+                                            bottomLeft: Radius.circular(10),
+                                          ),
+                                          color: colorSatu.withOpacity(0.9)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5),
+                                        child: Text(
+                                          '${animeComplate.rating}',
+                                          style: TextStyle(
+                                              color: Colors.amber[400]),
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Text(
-                                      '${animeComplate.title}',
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(fontSize: 15),
-                                    ),
                                   ),
-                                ),
-                              ],
+                                  Positioned(
+                                    bottom: 0,
+                                    child: Container(
+                                      width: Get.width,
+                                      color: colorSatu.withOpacity(0.9),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5),
+                                        child: Text(
+                                          animeComplate.title!.length >= 20
+                                              ? '${animeComplate.title!.substring(0, 20)}...'
+                                              : '${animeComplate.title}',
+                                          maxLines: 1,
+                                          style: const TextStyle(fontSize: 13),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           );
                         },

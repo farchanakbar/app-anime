@@ -19,7 +19,7 @@ class AnimeItem extends StatelessWidget {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
-        itemCount: dataGenre?.length,
+        itemCount: dataGenre?.length ?? 0,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 10,
@@ -27,72 +27,81 @@ class AnimeItem extends StatelessWidget {
             mainAxisSpacing: 10,
             childAspectRatio: 3 / 4),
         itemBuilder: (context, index) {
-          final genre.Anime genredataGenre = dataGenre![index];
+          final genre.Anime dataAnime = dataGenre![index];
           return InkWell(
             onTap: () {
               Get.toNamed(Routes.ANIME_DETAIL, arguments: {
-                'title': dataGenre![index].title,
-                'slug': dataGenre![index].slug
+                'title': dataAnime.title,
+                'slug': dataAnime.slug
               });
             },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  children: [
-                    SizedBox(
-                      height: 200,
-                      width: 300,
-                      child: Image.network(
-                        '${genredataGenre.poster}',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Container(
-                        color: colorDua.withOpacity(0.8),
-                        child: Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: Text(genredataGenre.episodeCount != null
-                              ? 'Total Eps ${genredataGenre.episodeCount}'
-                              : 'Unknown'),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        color: colorDua.withOpacity(0.8),
-                        child: Padding(
-                          padding: const EdgeInsets.all(2),
-                          child: Text(
-                            genredataGenre.rating != ''
-                                ? '${genredataGenre.rating}'
-                                : '0.0',
-                            style: const TextStyle(color: Colors.yellow),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Text(
-                      '${genredataGenre.title}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 15),
+            child: Container(
+              decoration:
+                  BoxDecoration(border: Border.all(color: Colors.white54)),
+              child: Stack(
+                children: [
+                  SizedBox(
+                    height: 350,
+                    width: 300,
+                    child: Image.network(
+                      '${dataAnime.poster}',
+                      fit: BoxFit.cover,
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                )
-              ],
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          bottomRight: Radius.circular(10),
+                        ),
+                        color: colorSatu.withOpacity(0.9)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        dataAnime.episodeCount != null
+                            ? '${dataAnime.episodeCount} Episode'
+                            : 'On-Going',
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(10),
+                          ),
+                          color: colorSatu.withOpacity(0.9)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Text(
+                          dataAnime.rating != ''
+                              ? '${dataAnime.rating}'
+                              : 'No Rating',
+                          style: TextStyle(color: Colors.amber[400]),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    child: Container(
+                      width: Get.width,
+                      color: colorSatu.withOpacity(0.9),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Text(
+                          dataAnime.title!.length >= 20
+                              ? '${dataAnime.title!.substring(0, 20)}...'
+                              : '${dataAnime.title}',
+                          maxLines: 1,
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         },

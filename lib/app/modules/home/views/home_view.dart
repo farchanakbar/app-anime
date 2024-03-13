@@ -5,6 +5,8 @@ import 'package:ngewibu/app/constants/color.dart';
 import 'package:ngewibu/app/data/models/genres.dart';
 import 'package:ngewibu/app/data/models/home.dart';
 import 'package:ngewibu/app/routes/app_pages.dart';
+import 'package:ngewibu/widgets/loading.dart';
+import 'package:ngewibu/widgets/sawer.dart';
 
 import '../../../../widgets/anime_item.dart';
 import '../controllers/home_controller.dart';
@@ -13,13 +15,414 @@ class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
   @override
   Widget build(BuildContext context) {
+    Widget shimmer = SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          Container(
+            height: 40,
+            width: Get.width,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), color: colorDua),
+            child: const Center(
+              child: Text(
+                'Genre Anime',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Obx(
+            () => SizedBox(
+              height: 85,
+              child: GridView.builder(
+                itemCount: controller.genres.length,
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 5,
+                    crossAxisSpacing: 5,
+                    childAspectRatio: 3 / 11),
+                itemBuilder: (context, index) {
+                  final Genres genre = controller.genres[index];
+                  return Container(
+                      padding: const EdgeInsets.all(3),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Get.toNamed(Routes.GENRE_DETAIL, arguments: genre);
+                          },
+                          child: Text('${genre.name}')));
+                },
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Container(
+            height: 40,
+            width: Get.width,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), color: colorDua),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'On-Going Anime',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Get.toNamed(Routes.ANIME_ONGOING);
+                      },
+                      child: const Text('Lihat Semua'))
+                ],
+              ),
+            ),
+          ),
+          Sawer(
+            gotoLink: () {
+              controller.launchURL('https://trakteer.id/ngewibuu/tip');
+            },
+          ),
+          Obx(
+            () => Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemCount: controller.dataHomeOnGoing.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisExtent: 250,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 3 / 4),
+                  itemBuilder: (context, index) {
+                    final OngoingAnime animeOngoing =
+                        controller.dataHomeOnGoing[index];
+                    return InkWell(
+                      onTap: () {
+                        Get.toNamed(Routes.ANIME_DETAIL, arguments: {
+                          'title': animeOngoing.title,
+                          'slug': animeOngoing.slug
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white54)),
+                        child: Stack(
+                          children: [
+                            SizedBox(
+                              height: 350,
+                              width: 300,
+                              child: Image.network(
+                                '${animeOngoing.poster}',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.only(
+                                    bottomRight: Radius.circular(10),
+                                  ),
+                                  color: colorSatu.withOpacity(0.9)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: Text(
+                                  '${animeOngoing.currentEpisode}',
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                    ),
+                                    color: colorSatu.withOpacity(0.9)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Text(
+                                    '${animeOngoing.releaseDay}',
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              child: Container(
+                                width: Get.width,
+                                color: colorSatu.withOpacity(0.9),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Text(
+                                    animeOngoing.title!.length >= 20
+                                        ? '${animeOngoing.title!.substring(0, 20)}...'
+                                        : '${animeOngoing.title}',
+                                    maxLines: 1,
+                                    style: const TextStyle(fontSize: 13),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10, bottom: 20),
+                  height: 40,
+                  width: Get.width,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10), color: colorDua),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Complate Anime',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Get.toNamed(Routes.ANIME_COMPLATE);
+                          },
+                          child: const Text('Lihat Semua'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemCount: controller.dataHomeComplate.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisExtent: 250,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 3 / 4),
+                  itemBuilder: (context, index) {
+                    final CompleteAnime animeComplate =
+                        controller.dataHomeComplate[index];
+                    return InkWell(
+                      onTap: () {
+                        Get.toNamed(Routes.ANIME_DETAIL, arguments: {
+                          'title': animeComplate.title,
+                          'slug': animeComplate.slug
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white54)),
+                        child: Stack(
+                          children: [
+                            SizedBox(
+                              height: 350,
+                              width: 300,
+                              child: Image.network(
+                                '${animeComplate.poster}',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.only(
+                                    bottomRight: Radius.circular(10),
+                                  ),
+                                  color: colorSatu.withOpacity(0.9)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: Text(
+                                  '${animeComplate.episodeCount} Episode',
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                    ),
+                                    color: colorSatu.withOpacity(0.9)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Text(
+                                    '${animeComplate.rating}',
+                                    style: TextStyle(color: Colors.amber[400]),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              child: Container(
+                                width: Get.width,
+                                color: colorSatu.withOpacity(0.9),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Text(
+                                    animeComplate.title!.length >= 20
+                                        ? '${animeComplate.title!.substring(0, 20)}...'
+                                        : '${animeComplate.title}',
+                                    maxLines: 1,
+                                    style: const TextStyle(fontSize: 13),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(top: 10, bottom: 20),
+            height: 40,
+            width: Get.width,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), color: colorDua),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Genre Action',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Get.toNamed(
+                          Routes.GENRE_DETAIL,
+                          arguments: Genres(
+                            name: 'Action',
+                            slug: 'action',
+                            otakudesuUrl:
+                                'https://otakudesu.cloud/genres/action/',
+                          ),
+                        );
+                      },
+                      child: const Text('Lihat Semua'))
+                ],
+              ),
+            ),
+          ),
+          AnimeItem(dataGenre: controller.dataGenreAction),
+          Container(
+            margin: const EdgeInsets.only(top: 10, bottom: 20),
+            height: 40,
+            width: Get.width,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), color: colorDua),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Genre Comedy',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Get.toNamed(
+                          Routes.GENRE_DETAIL,
+                          arguments: Get.toNamed(
+                            Routes.GENRE_DETAIL,
+                            arguments: Genres(
+                              name: 'Comedy',
+                              slug: 'comedy',
+                              otakudesuUrl:
+                                  "https://otakudesu.cloud/genres/comedy/",
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text('Lihat Semua'))
+                ],
+              ),
+            ),
+          ),
+          AnimeItem(dataGenre: controller.dataGenreComedy),
+          Container(
+            margin: const EdgeInsets.only(top: 10, bottom: 20),
+            height: 40,
+            width: Get.width,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), color: colorDua),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Genre Ecchi',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Get.toNamed(
+                          Routes.GENRE_DETAIL,
+                          arguments: Get.toNamed(
+                            Routes.GENRE_DETAIL,
+                            arguments: Genres(
+                              name: 'Ecchi',
+                              slug: 'ecchi',
+                              otakudesuUrl:
+                                  "https://otakudesu.cloud/genres/ecchi/",
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text('Lihat Semua'))
+                ],
+              ),
+            ),
+          ),
+          AnimeItem(dataGenre: controller.dataGenreEcchi),
+          const SizedBox(
+            height: 10,
+          ),
+        ],
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
         title: SizedBox(
-          height: 200,
-          width: 150,
-          child: Image.asset('assets/images/logo.png'),
+          height: 300,
+          width: 250,
+          child: Image.asset(
+            'assets/images/logo.png',
+          ),
         ),
         actions: [
           Obx(() => IconButton(
@@ -32,94 +435,7 @@ class HomeView extends GetView<HomeController> {
                   : Icons.light_mode))),
           IconButton(
             onPressed: () {
-              Get.bottomSheet(
-                Container(
-                  height: Get.height * 0.5,
-                  width: Get.width,
-                  decoration: const BoxDecoration(
-                    color: colorSatu,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextField(
-                          controller: controller.textEditingController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            hintText: 'Cari Judul Anime',
-                            labelText: 'Judul Anime',
-                            labelStyle: const TextStyle(color: colorEmpat),
-                            hintStyle: const TextStyle(color: colorEmpat),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                controller.textEditingController.clear();
-                              },
-                              icon: const Icon(Icons.clear),
-                            ),
-                          ),
-                          keyboardType: TextInputType.text,
-                          onChanged: (value) {
-                            controller.searchAnime(value);
-                          },
-                        ),
-                        Obx(() => Expanded(
-                              child: ListView.builder(
-                                itemCount: controller.searchResults.length,
-                                itemBuilder: (context, index) {
-                                  final anime = controller.searchResults[index];
-                                  return Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Column(
-                                      children: [
-                                        ListTile(
-                                          onTap: () async {
-                                            await Get.toNamed(
-                                                Routes.ANIME_DETAIL,
-                                                arguments: {
-                                                  'title': anime['title'],
-                                                  'slug': anime['slug']
-                                                });
-                                            controller.textEditingController
-                                                .clear();
-                                            Get.back();
-                                          },
-                                          leading:
-                                              Image.network(anime['poster']),
-                                          title: Text(
-                                            '${anime['title']}',
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          color: Colors.white,
-                                          height: 1,
-                                          width: Get.width,
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ))
-                      ],
-                    ),
-                  ),
-                ),
-              );
+              controller.openBottomSheet();
             },
             icon: const Icon(Icons.search),
           ),
@@ -136,11 +452,23 @@ class HomeView extends GetView<HomeController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
-                    const Text(
-                      'Genre Anime',
-                      style: TextStyle(fontSize: 20),
+                    Container(
+                      height: 40,
+                      width: Get.width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colorDua),
+                      child: const Center(
+                        child: Text(
+                          'Genre Anime',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
                     ),
                     Obx(
                       () => SizedBox(
@@ -170,287 +498,382 @@ class HomeView extends GetView<HomeController> {
                       ),
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Update Terbaru',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        TextButton(
-                            onPressed: () {
-                              Get.toNamed(Routes.ANIME_ONGOING);
-                            },
-                            child: const Text('Lihat Semua'))
-                      ],
-                    ),
-                    SingleChildScrollView(
-                      child: Obx(
-                        () => Column(
+                    Container(
+                      height: 40,
+                      width: Get.width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colorDua),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              itemCount: controller.dataHomeOnGoing.length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 10,
-                                      mainAxisExtent: 250,
-                                      mainAxisSpacing: 10,
-                                      childAspectRatio: 3 / 4),
-                              itemBuilder: (context, index) {
-                                final OngoingAnime animeOngoing =
-                                    controller.dataHomeOnGoing[index];
-                                return InkWell(
-                                  onTap: () {
-                                    Get.toNamed(Routes.ANIME_DETAIL,
-                                        arguments: {
-                                          'title': animeOngoing.title,
-                                          'slug': animeOngoing.slug
-                                        });
-                                  },
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Stack(
-                                        children: [
-                                          SizedBox(
-                                            height: 200,
-                                            width: 300,
-                                            child: Image.network(
-                                              '${animeOngoing.poster}',
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(5),
-                                            child: Container(
-                                              color: colorDua.withOpacity(0.8),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(5),
-                                                child: Text(
-                                                  '${animeOngoing.currentEpisode}',
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(5),
-                                          child: Text(
-                                            '${animeOngoing.title}',
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style:
-                                                const TextStyle(fontSize: 15),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
+                            const Text(
+                              'On-Going Anime',
+                              style: TextStyle(fontSize: 18),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Anime Complate',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                                TextButton(
-                                    onPressed: () {
-                                      Get.toNamed(Routes.ANIME_COMPLATE);
-                                    },
-                                    child: const Text('Lihat Semua'))
-                              ],
-                            ),
-                            GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              itemCount: controller.dataHomeComplate.length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 10,
-                                      mainAxisExtent: 250,
-                                      mainAxisSpacing: 10,
-                                      childAspectRatio: 3 / 4),
-                              itemBuilder: (context, index) {
-                                final CompleteAnime animeComplate =
-                                    controller.dataHomeComplate[index];
-                                return InkWell(
-                                  onTap: () {
-                                    Get.toNamed(Routes.ANIME_DETAIL,
-                                        arguments: {
-                                          'title': animeComplate.title,
-                                          'slug': animeComplate.slug
-                                        });
-                                  },
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Stack(
-                                        children: [
-                                          SizedBox(
-                                            height: 200,
-                                            width: 300,
-                                            child: Image.network(
-                                              '${animeComplate.poster}',
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(5),
-                                            child: Container(
-                                              color: colorDua.withOpacity(0.8),
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(5),
-                                                child: Text('Complate'),
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            bottom: 0,
-                                            right: 0,
-                                            child: Container(
-                                              color: colorDua.withOpacity(0.8),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(2),
-                                                child: Text(
-                                                  animeComplate.rating != ''
-                                                      ? '${animeComplate.rating}'
-                                                      : '0.0',
-                                                  style: const TextStyle(
-                                                      color: Colors.yellow),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(5),
-                                          child: Text(
-                                            '${animeComplate.title}',
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style:
-                                                const TextStyle(fontSize: 15),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
+                            TextButton(
+                                onPressed: () {
+                                  Get.toNamed(Routes.ANIME_ONGOING);
+                                },
+                                child: const Text('Lihat Semua'))
                           ],
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
+                    Sawer(
+                      gotoLink: () {
+                        controller
+                            .launchURL('https://trakteer.id/ngewibuu/tip');
+                      },
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Genre Action',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        TextButton(
-                            onPressed: () {
-                              Get.toNamed(
-                                Routes.GENRE_DETAIL,
-                                arguments: Genres(
-                                  name: 'Action',
-                                  slug: 'action',
-                                  otakudesuUrl:
-                                      'https://otakudesu.cloud/genres/action/',
+                    Obx(
+                      () => Column(
+                        children: [
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemCount: controller.dataHomeOnGoing.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 10,
+                                    mainAxisExtent: 250,
+                                    mainAxisSpacing: 10,
+                                    childAspectRatio: 3 / 4),
+                            itemBuilder: (context, index) {
+                              final OngoingAnime animeOngoing =
+                                  controller.dataHomeOnGoing[index];
+                              return InkWell(
+                                onTap: () {
+                                  Get.toNamed(Routes.ANIME_DETAIL, arguments: {
+                                    'title': animeOngoing.title,
+                                    'slug': animeOngoing.slug
+                                  });
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      border:
+                                          Border.all(color: Colors.white54)),
+                                  child: Stack(
+                                    children: [
+                                      SizedBox(
+                                        height: 350,
+                                        width: 300,
+                                        child: Image.network(
+                                          '${animeOngoing.poster}',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                              bottomRight: Radius.circular(10),
+                                            ),
+                                            color: colorSatu.withOpacity(0.9)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(5),
+                                          child: Text(
+                                            '${animeOngoing.currentEpisode}',
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        right: 0,
+                                        top: 0,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                bottomLeft: Radius.circular(10),
+                                              ),
+                                              color:
+                                                  colorSatu.withOpacity(0.9)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: Text(
+                                              '${animeOngoing.releaseDay}',
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        bottom: 0,
+                                        child: Container(
+                                          width: Get.width,
+                                          color: colorSatu.withOpacity(0.9),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: Text(
+                                              animeOngoing.title!.length >= 20
+                                                  ? '${animeOngoing.title!.substring(0, 20)}...'
+                                                  : '${animeOngoing.title}',
+                                              maxLines: 1,
+                                              style:
+                                                  const TextStyle(fontSize: 13),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               );
                             },
-                            child: const Text('Lihat Semua'))
-                      ],
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 10, bottom: 20),
+                            height: 40,
+                            width: Get.width,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: colorDua),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Complate Anime',
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Get.toNamed(Routes.ANIME_COMPLATE);
+                                    },
+                                    child: const Text('Lihat Semua'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemCount: controller.dataHomeComplate.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 10,
+                                    mainAxisExtent: 250,
+                                    mainAxisSpacing: 10,
+                                    childAspectRatio: 3 / 4),
+                            itemBuilder: (context, index) {
+                              final CompleteAnime animeComplate =
+                                  controller.dataHomeComplate[index];
+                              return InkWell(
+                                onTap: () {
+                                  Get.toNamed(Routes.ANIME_DETAIL, arguments: {
+                                    'title': animeComplate.title,
+                                    'slug': animeComplate.slug
+                                  });
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      border:
+                                          Border.all(color: Colors.white54)),
+                                  child: Stack(
+                                    children: [
+                                      SizedBox(
+                                        height: 350,
+                                        width: 300,
+                                        child: Image.network(
+                                          '${animeComplate.poster}',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                              bottomRight: Radius.circular(10),
+                                            ),
+                                            color: colorSatu.withOpacity(0.9)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(5),
+                                          child: Text(
+                                            '${animeComplate.episodeCount} Episode',
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        right: 0,
+                                        top: 0,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                bottomLeft: Radius.circular(10),
+                                              ),
+                                              color:
+                                                  colorSatu.withOpacity(0.9)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: Text(
+                                              '${animeComplate.rating}',
+                                              style: TextStyle(
+                                                  color: Colors.amber[400]),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        bottom: 0,
+                                        child: Container(
+                                          width: Get.width,
+                                          color: colorSatu.withOpacity(0.9),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: Text(
+                                              animeComplate.title!.length >= 20
+                                                  ? '${animeComplate.title!.substring(0, 20)}...'
+                                                  : '${animeComplate.title}',
+                                              maxLines: 1,
+                                              style:
+                                                  const TextStyle(fontSize: 13),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 10, bottom: 20),
+                      height: 40,
+                      width: Get.width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colorDua),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Genre Action',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            TextButton(
+                                onPressed: () {
+                                  Get.toNamed(
+                                    Routes.GENRE_DETAIL,
+                                    arguments: Genres(
+                                      name: 'Action',
+                                      slug: 'action',
+                                      otakudesuUrl:
+                                          'https://otakudesu.cloud/genres/action/',
+                                    ),
+                                  );
+                                },
+                                child: const Text('Lihat Semua'))
+                          ],
+                        ),
+                      ),
                     ),
                     AnimeItem(dataGenre: controller.dataGenreAction),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Genre Comedy',
-                          style: TextStyle(fontSize: 20),
+                    Container(
+                      margin: const EdgeInsets.only(top: 10, bottom: 20),
+                      height: 40,
+                      width: Get.width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colorDua),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Genre Comedy',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            TextButton(
+                                onPressed: () {
+                                  Get.toNamed(
+                                    Routes.GENRE_DETAIL,
+                                    arguments: Get.toNamed(
+                                      Routes.GENRE_DETAIL,
+                                      arguments: Genres(
+                                        name: 'Comedy',
+                                        slug: 'comedy',
+                                        otakudesuUrl:
+                                            "https://otakudesu.cloud/genres/comedy/",
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: const Text('Lihat Semua'))
+                          ],
                         ),
-                        TextButton(
-                            onPressed: () {
-                              Get.toNamed(
-                                Routes.GENRE_DETAIL,
-                                arguments: Get.toNamed(
-                                  Routes.GENRE_DETAIL,
-                                  arguments: Genres(
-                                    name: 'Comedy',
-                                    slug: 'comedy',
-                                    otakudesuUrl:
-                                        "https://otakudesu.cloud/genres/comedy/",
-                                  ),
-                                ),
-                              );
-                            },
-                            child: const Text('Lihat Semua'))
-                      ],
+                      ),
                     ),
                     AnimeItem(dataGenre: controller.dataGenreComedy),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Genre Ecchi',
-                          style: TextStyle(fontSize: 20),
+                    Container(
+                      margin: const EdgeInsets.only(top: 10, bottom: 20),
+                      height: 40,
+                      width: Get.width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colorDua),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Genre Ecchi',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            TextButton(
+                                onPressed: () {
+                                  Get.toNamed(
+                                    Routes.GENRE_DETAIL,
+                                    arguments: Get.toNamed(
+                                      Routes.GENRE_DETAIL,
+                                      arguments: Genres(
+                                        name: 'Ecchi',
+                                        slug: 'ecchi',
+                                        otakudesuUrl:
+                                            "https://otakudesu.cloud/genres/ecchi/",
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: const Text('Lihat Semua'))
+                          ],
                         ),
-                        TextButton(
-                            onPressed: () {
-                              Get.toNamed(
-                                Routes.GENRE_DETAIL,
-                                arguments: Get.toNamed(
-                                  Routes.GENRE_DETAIL,
-                                  arguments: Genres(
-                                    name: 'Ecchi',
-                                    slug: 'ecchi',
-                                    otakudesuUrl:
-                                        "https://otakudesu.cloud/genres/ecchi/",
-                                  ),
-                                ),
-                              );
-                            },
-                            child: const Text('Lihat Semua'))
-                      ],
+                      ),
                     ),
                     AnimeItem(dataGenre: controller.dataGenreEcchi),
+                    const SizedBox(
+                      height: 10,
+                    ),
                   ],
                 ),
               );
             } else {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return SizedBox(
+                height: Get.height,
+                width: Get.width,
+                child: LoadingItem(data: shimmer),
               );
             }
           },
