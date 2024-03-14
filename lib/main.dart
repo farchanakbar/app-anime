@@ -8,12 +8,10 @@ import 'app/routes/app_pages.dart';
 void main() {
   runApp(
     GetMaterialApp(
-      theme: CustomTheme.lightTheme,
-      darkTheme: CustomTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      theme: CustomTheme.darkTheme,
       debugShowCheckedModeBanner: false,
-      title: "Ngewibuu",
-      initialRoute: AppPages.INITIAL,
+      title: "NgeWibuu",
+      initialRoute: Routes.HOME,
       getPages: AppPages.routes,
     ),
   );

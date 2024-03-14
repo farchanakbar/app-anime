@@ -12,7 +12,6 @@ import '../../../data/models/genres.dart';
 import '../../../routes/app_pages.dart';
 
 class HomeController extends GetxController {
-  Rx<ThemeMode> currentTheme = ThemeMode.system.obs;
   late TextEditingController textEditingController = TextEditingController();
   var searchResults = [].obs;
   var genres = [].obs;
@@ -35,12 +34,6 @@ class HomeController extends GetxController {
     await getGenreAction();
     await getGenreComedy();
     await getGenreEcchi();
-  }
-
-  void switchTheme() {
-    currentTheme.value = currentTheme.value == ThemeMode.light
-        ? ThemeMode.dark
-        : ThemeMode.light;
   }
 
   void searchAnime(String query) async {
@@ -203,11 +196,5 @@ class HomeController extends GetxController {
   void dispose() {
     textEditingController.dispose();
     super.dispose();
-  }
-
-  @override
-  void onClose() {
-    print('closed');
-    super.onClose();
   }
 }
