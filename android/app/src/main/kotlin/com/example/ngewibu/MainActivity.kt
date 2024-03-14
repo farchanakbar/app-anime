@@ -1,4 +1,4 @@
-package com.example.ngewibu
+package com.ngewibu.anime
 
 import io.flutter.embedding.android.FlutterActivity
 
