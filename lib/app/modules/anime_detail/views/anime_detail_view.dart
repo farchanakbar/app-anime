@@ -14,12 +14,12 @@ class AnimeDetailView extends GetView<AnimeDetailController> {
   const AnimeDetailView({super.key});
   @override
   Widget build(BuildContext context) {
-    final String title = Get.arguments['title'];
-    final String slug = Get.arguments['slug'];
+    final title = Get.arguments['title'];
+    final slug = Get.arguments['slug'];
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          title,
+          '$title',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -79,9 +79,8 @@ class AnimeDetailView extends GetView<AnimeDetailController> {
                               Get.toNamed(
                                 Routes.DETAIL_EPISODE,
                                 arguments: {
-                                  'index': index,
-                                  'slug': slug,
-                                  'data': animeDetail
+                                  'poster': animeDetail.poster,
+                                  'slug': animeDetail.episodeLists?[index].slug
                                 },
                               );
                             },

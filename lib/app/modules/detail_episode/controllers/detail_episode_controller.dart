@@ -6,9 +6,9 @@ import 'package:http/http.dart' as http;
 import 'package:ngewibu/app/data/models/detail_episode.dart';
 
 class DetailEpisodeController extends GetxController {
-  Future<DetailEpisode> getDetailEpisode(String slug, String episode) async {
+  Future<DetailEpisode> getDetailEpisode(String slug) async {
     Uri url = Uri.parse(
-        'https://otakudesu-unofficial-api.rzkfyn.xyz/v1/anime/$slug/episodes/$episode');
+        'https://otakudesu-unofficial-api.rzkfyn.xyz/v1/episode/$slug');
     var res = await http.get(url);
     Map<String, dynamic> data = json.decode(res.body)['data'];
 

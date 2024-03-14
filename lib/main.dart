@@ -12,7 +12,7 @@ void main() {
       darkTheme: CustomTheme.darkTheme,
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
-      title: "Application",
+      title: "Ngewibuu",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
     ),
