@@ -85,7 +85,7 @@ class AnimeDetailView extends GetView<AnimeDetailController> {
                               );
                             },
                             child: Text(
-                                '${animeDetail!.title} Episode ${index + 1}'),
+                                '${animeDetail!.episodeLists?[index].episode}'),
                           ),
                           Container(
                             margin: const EdgeInsets.only(bottom: 10),
