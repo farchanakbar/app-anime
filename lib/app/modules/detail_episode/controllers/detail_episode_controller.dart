@@ -8,7 +8,7 @@ import 'package:ngewibu/app/data/models/detail_episode.dart';
 class DetailEpisodeController extends GetxController {
   Future<DetailEpisode> getDetailEpisode(String slug) async {
     Uri url = Uri.parse(
-        'https://otakudesu-unofficial-api.rzkfyn.xyz/v1/episode/$slug');
+        'https://otakudesu-unofficial-api.vercel.app/v1/episode/$slug');
     var res = await http.get(url);
     Map<String, dynamic> data = json.decode(res.body)['data'];
 

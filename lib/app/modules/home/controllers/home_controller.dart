@@ -39,7 +39,7 @@ class HomeController extends GetxController {
   void searchAnime(String query) async {
     try {
       final response = await http.get(Uri.parse(
-          'https://otakudesu-unofficial-api.rzkfyn.xyz/v1/search/$query'));
+          'https://otakudesu-unofficial-api.vercel.app/v1/search/$query'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -58,7 +58,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> getHome() async {
-    Uri url = Uri.parse('https://otakudesu-unofficial-api.rzkfyn.xyz/v1/home');
+    Uri url = Uri.parse('https://otakudesu-unofficial-api.vercel.app/v1/home');
     var res = await http.get(url);
     var data = Home.fromJson(json.decode(res.body)['data']);
     dataHomeOnGoing.value = data.ongoingAnime;
@@ -67,7 +67,7 @@ class HomeController extends GetxController {
 
   Future<void> getAllGenres() async {
     Uri url =
-        Uri.parse('https://otakudesu-unofficial-api.rzkfyn.xyz/v1/genres');
+        Uri.parse('https://otakudesu-unofficial-api.vercel.app/v1/genres');
     var res = await http.get(url);
     List? data = (json.decode(res.body) as Map<String, dynamic>)['data'];
     List<Genres> dataAnime = data!.map((e) => Genres.fromJson(e)).toList();
@@ -76,7 +76,7 @@ class HomeController extends GetxController {
 
   Future<void> getGenreAction() async {
     Uri url = Uri.parse(
-        'https://otakudesu-unofficial-api.rzkfyn.xyz/v1/genres/action');
+        'https://otakudesu-unofficial-api.vercel.app/v1/genres/action');
     var res = await http.get(url);
     List? data =
         (json.decode(res.body) as Map<String, dynamic>)['data']['anime'];
@@ -86,7 +86,7 @@ class HomeController extends GetxController {
 
   Future<void> getGenreComedy() async {
     Uri url = Uri.parse(
-        'https://otakudesu-unofficial-api.rzkfyn.xyz/v1/genres/comedy');
+        'https://otakudesu-unofficial-api.vercel.app/v1/genres/comedy');
     var res = await http.get(url);
     List? data =
         (json.decode(res.body) as Map<String, dynamic>)['data']['anime'];
@@ -96,7 +96,7 @@ class HomeController extends GetxController {
 
   Future<void> getGenreEcchi() async {
     Uri url = Uri.parse(
-        'https://otakudesu-unofficial-api.rzkfyn.xyz/v1/genres/ecchi');
+        'https://otakudesu-unofficial-api.vercel.app/v1/genres/ecchi');
     var res = await http.get(url);
 
     List? data =

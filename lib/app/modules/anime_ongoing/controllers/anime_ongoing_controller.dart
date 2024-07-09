@@ -15,7 +15,7 @@ class AnimeOngoingController extends GetxController {
   Future<void> getAllOngoing() async {
     try {
       final response = await http.get(Uri.parse(
-          'https://otakudesu-unofficial-api.rzkfyn.xyz/v1/ongoing-anime/$page'));
+          'https://otakudesu-unofficial-api.vercel.app/v1/ongoing-anime/$page'));
 
       if (response.statusCode == 200) {
         final data = DetailOngoing.fromJson(json.decode(response.body));
@@ -39,7 +39,7 @@ class AnimeOngoingController extends GetxController {
         isLoading.value = true;
         page++;
         final response = await http.get(Uri.parse(
-            'https://otakudesu-unofficial-api.rzkfyn.xyz/v1/ongoing-anime/$page'));
+            'https://otakudesu-unofficial-api.vercel.app/v1/ongoing-anime/$page'));
 
         if (response.statusCode == 200) {
           final data = DetailOngoing.fromJson(json.decode(response.body));

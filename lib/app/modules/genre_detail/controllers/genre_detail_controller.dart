@@ -14,7 +14,7 @@ class GenreDetailController extends GetxController {
   Future<void> getAllAnimeGenre(String genre) async {
     try {
       final response = await http.get(Uri.parse(
-          'https://otakudesu-unofficial-api.rzkfyn.xyz/v1/genres/$genre/$page'));
+          'https://otakudesu-unofficial-api.vercel.app/v1/genres/$genre/$page'));
 
       if (response.statusCode == 200) {
         final data = DetailGenre.fromJson(json.decode(response.body));
@@ -38,7 +38,7 @@ class GenreDetailController extends GetxController {
         isLoading.value = true;
         page++;
         final response = await http.get(Uri.parse(
-            'https://otakudesu-unofficial-api.rzkfyn.xyz/v1/genres/$genre/$page'));
+            'https://otakudesu-unofficial-api.vercel.app/v1/genres/$genre/$page'));
 
         if (response.statusCode == 200) {
           final data = DetailGenre.fromJson(json.decode(response.body));

@@ -7,7 +7,7 @@ import 'package:ngewibu/app/data/models/anime_detail.dart';
 class AnimeDetailController extends GetxController {
   Future<AnimeDetail> getAnimeDetail(String slug) async {
     Uri url =
-        Uri.parse('https://otakudesu-unofficial-api.rzkfyn.xyz/v1/anime/$slug');
+        Uri.parse('https://otakudesu-unofficial-api.vercel.app/v1/anime/$slug');
     var res = await http.get(url);
     Map<String, dynamic> data = json.decode(res.body)['data'];
 

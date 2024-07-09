@@ -28,7 +28,7 @@ class AnimeItem extends StatelessWidget {
             childAspectRatio: 3 / 4),
         itemBuilder: (context, index) {
           final genre.Anime dataAnime = dataGenre![index];
-          return InkWell(
+          return GestureDetector(
             onTap: () {
               Get.toNamed(Routes.ANIME_DETAIL, arguments: {
                 'title': dataAnime.title,
